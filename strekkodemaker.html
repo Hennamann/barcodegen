@@ -1,0 +1,112 @@
+<html>
+
+<head>
+    <title>Strekkode Generator</title>
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/jsbarcode/3.6.0/barcodes/JsBarcode.code39.min.js"></script>
+</head>
+
+<body>
+    <style>
+        @media print {
+            @page {
+                margin: 0;
+            }
+
+            .no-print,
+            .no-print * {
+                display: none !important;
+            }
+        }
+    </style>
+
+    <!-- Strekkode -->
+    <div style="text-align:center;font-family:verdana,sans-serif;font-size:10px;">
+        <p style="font-size:24px;margin-bottom:0px" id="instructions" class="no-print">Fyll inn feltene under og trykk
+            på "Lag
+            Strekkodelapp"</p>
+        <p style="font-size:24px;margin-bottom:0px" id="name"></p>
+        <p style="margin-top:0px;margin-bottom:5px;" id="department"></p>
+        <p style="font-size:18px;margin:0px;" id="room"></p><svg id="barcode" class="barcode" jsbarcode-value=""
+            jsbarcode-margin-top="0" jsbarcode-width="2" jsbarcode-font="verdana" jsbarcode-fontSize="24"
+            jsbarcode-height="100" style="width:300px;height:85px;margin-bottom:0px"></svg>
+        <p style="margin:0px;"></p>
+    </div>
+
+    <!-- Input seksjon -->
+    <br>
+    <div style="text-align:center;font-family:verdana,sans-serif;font-size:10px;" class="no-print">
+        <input id="nameInput" placeholder="Navn"><br>
+        <input id="departmentInput" style="margin-top:5px" placeholder="Avdeling"><br>
+        <input id="roomInput" style="margin-top:5px" placeholder="Rom"><br>
+        <input id="barcodeInput" style="margin-top:5px" placeholder="Strekkode innhold"><br>
+        <button id="submitButton" onclick="makeBarcode()" style="margin-top:10px">Lag Strekkodelapp</button>
+    </div>
+
+    <script eval="true">
+
+        var navn = document.getElementById("nameInput")
+        var department = document.getElementById("departmentInput")
+        var room = document.getElementById("roomInput")
+        var barcode = document.getElementById("barcodeInput")
+
+        // Gjør strekkoden usynlig frem til den er blitt generert.
+        document.getElementById("barcode").style.display = "none"
+
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        if (urlParams.has("strekkode")) {
+
+            navn.value = urlParams.get("navn")
+            department.value = urlParams.get("avd")
+            room.value = urlParams.get("rom")
+            barcode.value = urlParams.get("strekkode")
+            makeBarcode();
+        }
+
+        // Bruker den utfylte informasjonen til å generere en strekkodelapp, gir en feilmelding hvis ingen av feltene er utfylt
+        function makeBarcode() {
+
+            // Gjør strekkoden synlig igjen, nå som den er generert.
+            document.getElementById("barcode").style.display = "inline"
+
+            var nameValue = navn.value
+            var departmentValue = department.value
+            var roomValue = room.value
+            var barcodeValue = barcode.value
+
+            // Sjekker om ett eller flere av feltene er fullt ut, og gir en feilmelding hvis ikke.
+            if (nameValue, departmentValue, roomValue, barcodeValue) {
+                // Henter info fra de utfylte feltene og 
+                document.getElementById("instructions").setAttribute("hidden", 1)
+                document.getElementById("name").innerHTML = nameValue
+                document.getElementById("department").innerHTML = departmentValue
+                document.getElementById("room").innerHTML = roomValue
+                document.getElementById("barcode").setAttribute("jsbarcode-value", barcodeValue)
+
+                // Generer innhold i strekkoden
+                JsBarcode(".barcode").init();
+                setTimeout(function () { window.print(); window.document.close(); clearFields(); }, 500);
+            } else {
+                alert("Fyll ut strekkoden og minst ett av feltene først!")
+            }
+        }
+
+        // Tømmer alle feltene og skjuler strekkoden igjen.
+        function clearFields() {
+            document.getElementById("instructions").removeAttribute("hidden")
+            document.getElementById("barcode").style.display = "none"
+            document.getElementById("name").innerHTML = ""
+            document.getElementById("department").innerHTML = ""
+            document.getElementById("room").innerHTML = ""
+            document.getElementById("barcode").setAttribute("jsbarcode-value", "")
+
+            document.getElementById("nameInput").value = ""
+            document.getElementById("departmentInput").value = ""
+            document.getElementById("roomInput").value = ""
+            document.getElementById("barcodeInput").value = ""
+        }
+    </script>
+</body>
+
+</html>
