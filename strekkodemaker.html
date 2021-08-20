@@ -40,7 +40,9 @@
         <input id="departmentInput" style="margin-top:5px" placeholder="Avdeling"><br>
         <input id="roomInput" style="margin-top:5px" placeholder="Rom"><br>
         <input id="barcodeInput" style="margin-top:5px" placeholder="Strekkode innhold"><br>
-        <button id="submitButton" onclick="makeBarcode()" style="margin-top:10px">Lag Strekkodelapp</button>
+        <button id="submit1Button" onclick="makeBarcode(false)" style="margin-top:10px">Lag 1 Strekkodelapp</button>
+        <button id="submitMultButton" onclick="makeBarcode(true)" style="margin-top:10px">Lag Flere
+            Strekkodelapper</button>
     </div>
 
     <script eval="true">
@@ -61,11 +63,11 @@
             department.value = urlParams.get("avd")
             room.value = urlParams.get("rom")
             barcode.value = urlParams.get("strekkode")
-            makeBarcode();
+            makeBarcode(false);
         }
 
         // Bruker den utfylte informasjonen til å generere en strekkodelapp, gir en feilmelding hvis ingen av feltene er utfylt
-        function makeBarcode() {
+        function makeBarcode(mult) {
 
             // Gjør strekkoden synlig igjen, nå som den er generert.
             document.getElementById("barcode").style.display = "inline"
@@ -86,7 +88,14 @@
 
                 // Generer innhold i strekkoden
                 JsBarcode(".barcode").init();
-                setTimeout(function () { window.print(); window.document.close(); clearFields(); }, 500);
+
+                if (mult == false) {
+                    setTimeout(function () { window.print(); window.document.close(); clearFields(); }, 500);
+                }
+                else {
+                    setTimeout(function () { window.print(); window.document.close(); }, 500);
+                }
+
             } else {
                 alert("Fyll ut strekkoden og minst ett av feltene først!")
             }
